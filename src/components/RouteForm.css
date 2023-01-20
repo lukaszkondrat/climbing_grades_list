@@ -1,0 +1,69 @@
+form label {
+  font-weight: 700;
+}
+
+form input,
+form select,
+form textarea {
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+}
+
+form .btn {
+  display: flex;
+  justify-content: flex-end;
+  background-color: ghostwhite;
+}
+form button {
+  border: 1px solid;
+  padding: 5px;
+  border-radius: 5px;
+  margin-top: 20px;
+  margin-bottom: 5px;
+  margin-right: 10px;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+}
+form button:hover {
+  background-color: aliceblue;
+  cursor: pointer;
+}
+
+.first-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0px 20px;
+}
+
+.first-row .grade {
+  margin-right: 5px;
+}
+
+.first-row label {
+  margin-right: 5px;
+}
+
+.first-row select {
+  background-color: rgb(253, 253, 253);
+  border: 1px solid gray;
+  padding: 2px;
+}
+
+.second-row {
+  display: flex;
+  align-items: center;
+
+  margin: 10px 0px;
+}
+
+.second-row label {
+  margin-right: 10px;
+}
+
+.third-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.third-row label {
+  margin-right: 10px;
+}
