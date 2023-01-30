@@ -1,18 +1,22 @@
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useEffect, useContext } from "react";
 import Login from "./components/Login";
 import RouteForm from "./components/RouteForm";
 import RouteList from "./components/RouteList";
+import AuthContext from "./store/auth-store";
 
 import "./App.css";
 
 const App = () => {
   const [routes, setRoutes] = useState([]);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const authCtx = useContext(AuthContext);
 
-  const urlLK = "https://routes-keeper-default-rtdb.firebaseio.com/routes.json";
+  const urlLK =
+    "https://routes-keeper-default-rtdb.firebaseio.com/routesLK.json";
+  const urlJG =
+    "https://routes-keeper-default-rtdb.firebaseio.com/routesJG.json";
 
   useEffect(() => {
-    fetch(urlLK)
+    fetch(authCtx.isLoggedInLK ? urlLK : urlJG)
       .then((response) => {
         return response.json();
       })
@@ -20,56 +24,55 @@ const App = () => {
         const routes = [];
         for (const key in data) {
           const route = {
-            id: key,
+            // id: key,
             ...data[key],
           };
           routes.push(route);
         }
         setRoutes(routes);
       });
-  });
+  }, [authCtx]);
 
   const addNewRouteHandler = (route) => {
-    fetch(urlLK, {
+    fetch(authCtx.isLoggedInLK ? urlLK : urlJG, {
       method: "POST",
       body: JSON.stringify(route),
       headers: { "Content-Type": "application/json" },
-    });
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => (route.id = data.name));
+
     setRoutes((currRoutes) => [...currRoutes, route]);
   };
 
   const removeRouteHandler = (routes, id) => {
     fetch(
-      `https://routes-keeper-default-rtdb.firebaseio.com/routes/${id}.json`,
+      authCtx.isLoggedInLK
+        ? `https://routes-keeper-default-rtdb.firebaseio.com/routesLK/${id}.json`
+        : `https://routes-keeper-default-rtdb.firebaseio.com/routesJG/${id}.json`,
+
       {
         method: "DELETE",
       }
     );
     setRoutes(routes);
   };
-  const logInHandler = () => {
-    setIsLoggedIn(true);
-  };
-  // const sortRoutesHandler = (routes) => {
-  //   setRoutes(routes);
-  //   fetch(urlLK, { method: "PATCH" });
-  // };
 
   return (
     <div>
-      {!isLoggedIn && <Login logIn={logInHandler} />}
-      {isLoggedIn && (
+      {!authCtx.isLoggedInLK && !authCtx.isLoggedInJG && (
+        <Login logInLK={authCtx.loginLK} logInJG={authCtx.loginJG} />
+      )}
+      {(authCtx.isLoggedInLK || authCtx.isLoggedInJG) && (
         <Fragment>
           <h1>7a i trudniej :)</h1>
           <div className="container">
             <RouteForm onAdd={addNewRouteHandler} />
           </div>
           <div className="container">
-            <RouteList
-              routes={routes}
-              onRemove={removeRouteHandler}
-              // onSort={sortRoutesHandler}
-            />
+            <RouteList routes={routes} onRemove={removeRouteHandler} />
           </div>
         </Fragment>
       )}

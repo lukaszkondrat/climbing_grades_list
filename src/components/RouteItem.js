@@ -3,9 +3,9 @@ import "./RouteItem.css";
 const RouteItem = (props) => {
   const deleteItemHandler = (event) => {
     const id = event.target.parentElement.previousElementSibling.id;
+    if (!id) return;
     props.onRemove(id);
   };
-
   return (
     <div className="card2">
       <li id={props.route.id} key={props.route.id}>
