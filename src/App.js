@@ -24,7 +24,7 @@ const App = () => {
         const routes = [];
         for (const key in data) {
           const route = {
-            // id: key,
+            id: key,
             ...data[key],
           };
           routes.push(route);
